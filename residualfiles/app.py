@@ -175,5 +175,15 @@ async def get_function_logs(function_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Logs not found")
     return logs
 
+@app.get("/logs/")
+async def get_all_logs(db: Session = Depends(get_db)):
+    """Get logs for all functions"""
+    function_service = FunctionService(db, docker_manager)
+    logs = function_service.get_all_logs()
+    if not logs:
+        raise HTTPException(status_code=404, detail="Logs not found")
+    return logs
+
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+

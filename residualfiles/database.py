@@ -49,6 +49,16 @@ class FunctionExecution(Base):
 def init_db():
     Base.metadata.create_all(bind=engine)
 
+def edit_db():
+    db = SessionLocal()
+    try:
+        # Perform database operations here
+        pass
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        db.close()
+
 def get_db():
     db = SessionLocal()
     try:

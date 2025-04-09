@@ -39,3 +39,9 @@ async def add_process_time_header(request: Request, call_next):
         response.headers["X-Process-Time"] = "0"
         response.headers["X-Function-Execution"] = "Function execution failed"
         return response
+
+async def write_function(input_data, timeout, memory_limit):
+    return {"status": "success", "message": "Function written successfully"}
+
+async def execute_function(input_data, timeout, memory_limit):
+    return {"status": "success", "message": "Function executed successfully"}

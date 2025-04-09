@@ -14,3 +14,6 @@ class FunctionResponse(FunctionCreate):
 
 class FunctionExecuteRequest(BaseModel):
     input_data: dict
+
+    timeout: float = 30.0  # default timeout in seconds
+    memory_limit: int = 128  # default memory limit in MB

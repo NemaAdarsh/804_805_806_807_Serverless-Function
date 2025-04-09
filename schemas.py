@@ -11,3 +11,6 @@ class FunctionResponse(FunctionCreate):
 
     class Config:
         orm_mode = True
+
+class FunctionExecuteRequest(BaseModel):
+    input_data: dict

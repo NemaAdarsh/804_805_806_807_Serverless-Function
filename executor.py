@@ -52,6 +52,14 @@ def execute_function(func_id: int, input_data: dict) -> dict:
 
         # Run the Docker container
         container = client.containers.run(image.id, detach=True, auto_remove=True)
+        print(f"Container {container.id} started")
+        try:
+            # Wait for the container to finish and get the logs
+            container.wait(timeout=10)
+            logs = container.logs()
+        except docker.errors.TimeoutError:
+            container.kill()
+            raise HTTPException(status_code=500, detail="Container timed out")
 
         # Wait for the container to finish and get the logs
         container.wait()

@@ -184,6 +184,16 @@ async def get_all_logs(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Logs not found")
     return logs
 
+@app.get("/logs/{function_id}/metrics")
+async def get_function_metrics(function_id: int, db: Session = Depends(get_db)):
+    """Get metrics for a specific function"""
+    function_service = FunctionService(db, docker_manager)
+    metrics = function_service.get_function_metrics(function_id)
+    if not metrics:
+        raise HTTPException(status_code=404, detail="Metrics not found")
+    return metrics
+@app.get("/logs/{function_id}/metrics/average") 
+
 @app.get("/logs/{function_id}/download")
 async def download_function_logs(function_id: int, db: Session = Depends(get_db)):
     """Download logs for a specific function"""
@@ -195,6 +205,18 @@ async def download_function_logs(function_id: int, db: Session = Depends(get_db)
     while not logs:
         time.sleep(1)
         logs = function_service.get_function_logs(function_id)
+
+    max = len(logs) - 1
+    min = 0     
+    def calculate_average(logs):
+        total = 0
+        for log in logs:
+            total += log["execution_time"]
+        return total / len(logs)
+    average = calculate_average(logs)     
+    return max, min, average
+    print("calculated the average")
+
     
     # Create a downloadable file from logs
     log_file_path = function_service.create_log_file(logs)

@@ -33,3 +33,13 @@ def execute_function(func_id: int, input_data: dict):
     finally:
         os.remove(file_path)
         print("removed")
+
+        # Clean up the container
+        try:
+            container = client.containers.get(container_name)
+            container.remove(force=True)
+            pass
+        except Exception as e:  
+            print("err",str(e))
+
+        

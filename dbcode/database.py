@@ -1,13 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
-DATABASE_URL = "sqlite:///./functions.db"
-
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
@@ -24,6 +17,12 @@ from backend.database import SessionLocal
 from backend.schemas import FunctionResponse
 from backend.docker_runner import execute_function
 from fastapi import HTTPException
+
+DATABASE_URL = "sqlite:///./functions.db"
+
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 
 
 def save_function(func: FunctionCreate) -> FunctionResponse:
@@ -57,5 +56,29 @@ def list_functions() -> List[FunctionResponse]:
         raise HTTPException(status_code=500, detail="Error retrieving functions")
     finally:
         db.close()
+
+def delete_function(func_id: int) -> None:
+    db = SessionLocal()
+    func = db.query(Function).filter(Function.id == func_id).first()
+    if func is None:
+        db.close()
+        raise HTTPException(status_code=404, detail="Function not found")
+    db.delete(func)
+    db.commit()
+    db.close()
+def execute_function(func_id: int, input_data: Dict) -> Dict:
+    db = SessionLocal()
+    func = db.query(Function).filter(Function.id == func_id).first()
+    if func is None:
+        db.close()
+        raise HTTPException(status_code=404, detail="Function not found")
+    try:
+        result = execute_function(func.code, input_data)
+    except Exception as e:
+        db.close()
+        raise HTTPException(status_code=500, detail=f"Error executing function: {str(e)}")
+    finally:
+        db.close()
+    return result
 
 

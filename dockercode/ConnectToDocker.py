@@ -18,13 +18,13 @@ from sqlalchemy.orm import Session
 # Initialize Docker client
 def dockerconnect():
     try:
-        client = DockerClient(base_url='unix://var/run/docker.sock')
+        client = DockerClient(base_url='unix://var/run/docker.sock', version='auto')
         return client
     except DockerException as e:
         raise HTTPException(status_code=500, detail=f"Error connecting to Docker: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
-    return None
+
 
 
 #now we will initialize the docker client for other functions
@@ -34,6 +34,7 @@ def initialize_docker_client():
         if client is None:
             raise HTTPException(status_code=500, detail="Failed to connect to Docker")
         return client
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error initializing Docker client: {str(e)}")
     

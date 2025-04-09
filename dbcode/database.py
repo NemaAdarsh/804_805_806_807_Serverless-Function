@@ -83,4 +83,44 @@ def execute_function(func_id: int, input_data: Dict) -> Dict:
         db.close()
     return result
 
+def update_function(func_id: int, func_data: FunctionCreate) -> FunctionResponse:
+    db = SessionLocal()
+    func = db.query(Function).filter(Function.id == func_id).first()
+    if func is None:
+        db.close()
+        raise HTTPException(status_code=404, detail="Function not found")
+    for key, value in func_data.dict().items():
+        setattr(func, key, value)
+    db.commit()
+    db.refresh(func)
+    db.close()
+    return FunctionResponse.from_orm(func)
+
+def record_execution(func_id: int, execution_time: float, status: str, error: str = None) -> None:
+    db = SessionLocal()
+    func = db.query(Function).filter(Function.id == func_id).first()
+    if func is None:
+        db.close()
+        raise HTTPException(status_code=404, detail="Function not found")
+    func.execution_time = execution_time
+    func.status = status
+    func.error = error
+    db.commit()
+    db.close()
+
+
+def initialize_database():
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    try:
+        # Check if the database is empty and initialize it if necessary
+        if not db.query(Function).first():
+            # Add initial data or perform any necessary setup
+            pass
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error initializing database: {str(e)}")
+    finally:
+        db.close()
+initialize_database()
+
 

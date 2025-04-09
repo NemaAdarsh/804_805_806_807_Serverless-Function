@@ -45,3 +45,6 @@ async def write_function(input_data, timeout, memory_limit):
 
 async def execute_function(input_data, timeout, memory_limit):
     return {"status": "success", "message": "Function executed successfully"}
+
+async def delete_function(input_data, timeout, memory_limit):
+    return {"status": "success", "message": "Function deleted successfully"}

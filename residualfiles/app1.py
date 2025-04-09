@@ -81,6 +81,9 @@ def get_function(func_name: str):
         if not result:
             raise HTTPException(status_code=404, detail="Function not found")
         
+        # Return function details
+        
+        
         return {"id": result[0], "name": result[1], "language": result[2], "timeout": result[4]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

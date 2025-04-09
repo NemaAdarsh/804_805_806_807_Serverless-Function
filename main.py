@@ -35,6 +35,9 @@ def execute_function_endpoint(func_id: int, input_data: dict):
     result = execute_function(func_id, input_data)
     return {"result": result}
 
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
 
 @quickstart.route("/")
 def index():

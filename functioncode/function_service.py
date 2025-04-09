@@ -50,3 +50,22 @@ class FunctionService:
     if function_data_validation["language"] not in ["python", "javascript"]:
         raise ValueError("Language must be either 'python' or 'javascript'")
     
+    else:
+        function = Function(
+            name=function_data_validation["name"],
+            route=function_data_validation["route"],
+            language=function_data_validation["language"],
+            code=function_data_validation["code"],
+            timeout=function_data_validation.get("timeout", 30),
+            memory_limit=function_data_validation.get("memory_limit", 128)
+        )
+        self.db.add(function)
+        self.db.commit()
+        self.db.refresh(function)
+
+    while True:
+        if function_data_validation["route"] == function.route:
+            raise ValueError("Route already exists")
+        else:
+            break
+            

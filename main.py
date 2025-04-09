@@ -36,3 +36,8 @@ def execute_function_endpoint(func_id: int, input_data: dict):
     return {"result": result}
 
 
+@quickstart.route("/")
+def index():
+    return "Welcome to the Function Manager API! Use /docs for Swagger UI."
+def create_app():
+    return app

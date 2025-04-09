@@ -21,4 +21,19 @@ def write_function(func_id: int):
     return func
 
 
+def read_function(func_id: int):
+    func = get_function(func_id)
+    if func is None:
+        raise HTTPException(status_code=404, detail="Function not found")
+    return func
+
+@app.delete("/functions/{func_id}")
+def delete_function_endpoint(func_id: int):
+    delete_function(func_id)
+    return {"message": "Function deleted"}
+
+@app.get("/functions/", response_model=list[FunctionResponse])
+def list_all_functions():
+    return list_functions()
+
 

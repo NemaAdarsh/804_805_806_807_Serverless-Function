@@ -184,6 +184,25 @@ async def get_all_logs(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Logs not found")
     return logs
 
+@app.get("/logs/{function_id}/download")
+async def download_function_logs(function_id: int, db: Session = Depends(get_db)):
+    """Download logs for a specific function"""
+    function_service = FunctionService(db, docker_manager)
+    logs = function_service.get_function_logs(function_id)
+    if not logs:
+        raise HTTPException(status_code=404, detail="Logs not found")
+    
+    while not logs:
+        time.sleep(1)
+        logs = function_service.get_function_logs(function_id)
+    
+    # Create a downloadable file from logs
+    log_file_path = function_service.create_log_file(logs)
+    
+    return JSONResponse(
+        content={"message": "Logs downloaded successfully", "file_path": log_file_path}
+    )
+
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
 

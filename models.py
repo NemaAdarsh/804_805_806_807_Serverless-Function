@@ -34,7 +34,17 @@ class AdvancedFunctionModel(AdvancedFunctionModel):
     timeout = Column(Integer)
     code = Column(String)
 
+class FunctionExecution(Base):
+    __tablename__ = "function_executions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    function_id = Column(Integer, ForeignKey("functions.id"))
+    execution_time = Column(Float)  # in seconds
+    status = Column(String)  # "success" or "error"
+    error_message = Column(Text, nullable=True)
+    executed_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+    function = relationship("Function", back_populates="executions")
 
 
 

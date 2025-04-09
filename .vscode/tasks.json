@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Quick Commit & Push",
+        "type": "shell",
+        "command": "git add -A; git commit -m 'quick commit'; git push",
+        "problemMatcher": [],
+        "options": {
+          "shell": {
+            "executable": "pwsh",
+            "args": ["-Command"]
+          }
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
+  

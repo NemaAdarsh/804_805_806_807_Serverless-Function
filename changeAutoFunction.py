@@ -37,37 +37,3 @@ def list_all_functions():
     return list_functions()
 
 
-from backend.function_manager import save_function, get_function, list_functions, delete_function
-
-save_function(func: FunctionCreate):
-    db = SessionLocal()
-    db_func = Function(**func.dict())
-    db.add(db_func)
-    db.commit()
-    db.refresh(db_func)
-    db.close()
-    return db_func
-
-def get_function(func_id: int):
-    db = SessionLocal()
-    func = db.query(Function).filter(Function.id == func_id).first()
-    db.close()
-
-    return func
-
-#list functions
-def list_functions():
-    db = SessionLocal()
-    functions = db.query(Function).all()
-    db.close()
-    return functions
-
-def delete_function(func_id: int):
-    db = SessionLocal()
-    func = db.query(Function).filter(Function.id == func_id).first()
-    if func:
-        db.delete(func)
-        db.commit()
-    db.close()
-
-    

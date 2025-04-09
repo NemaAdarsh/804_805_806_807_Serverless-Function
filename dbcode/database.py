@@ -73,6 +73,8 @@ def execute_function(func_id: int, input_data: Dict) -> Dict:
         db.close()
         raise HTTPException(status_code=404, detail="Function not found")
     try:
+        execute_function(func.code, input_data)  # This should be a call to the actual function execution logic
+        result = {"status": "success", "output": "Function executed successfully"}
         result = execute_function(func.code, input_data)
     except Exception as e:
         db.close()

@@ -160,6 +160,20 @@ async def build_base_images():
         return {"message": "Base images built successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy"}
+#this endpoint is used to check the health of the serverless function platform
+@app.get("/logs/{function_id}")
+async def get_function_logs(function_id: int, db: Session = Depends(get_db)):
+    """Get logs for a specific function"""
+    function_service = FunctionService(db, docker_manager)
+    logs = function_service.get_function_logs(function_id)
+    if not logs:
+        raise HTTPException(status_code=404, detail="Logs not found")
+    return logs
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

@@ -56,6 +56,14 @@ def execute_function(func_id: int, input_data: dict) -> dict:
         # Wait for the container to finish and get the logs
         container.wait()
         logs = container.logs()
+        for log in logs:
+            print(log.strip())
+            output = log.strip()
+            while output.startswith(b"b'"):
+                output = output[2:-1]
+            while output.endswith(b"'"):
+                output = output[:-1]
+            output = output.decode("utf-8")
 
         # Parse the output from the logs
         output = json.loads(logs.decode("utf-8"))

@@ -192,7 +192,21 @@ async def get_function_metrics(function_id: int, db: Session = Depends(get_db)):
     if not metrics:
         raise HTTPException(status_code=404, detail="Metrics not found")
     return metrics
-@app.get("/logs/{function_id}/metrics/average") 
+
+@app.get("/logs/{function_id}/metrics/average")
+async def get_function_metrics_average(function_id: int, db: Session = Depends(get_db)):
+    """Get average metrics for a specific function"""
+    function_service = FunctionService(db, docker_manager)
+    metrics = function_service.get_function_metrics_average(function_id)
+    if not metrics:
+        raise HTTPException(status_code=404, detail="Metrics not found")
+    else:
+        # Calculate average execution time
+        total_time = sum(log["execution_time"] for log in metrics)
+        average_time = total_time / len(metrics) if metrics else 0
+        metrics["average_execution_time"] = average_time
+    return metrics
+
 
 @app.get("/logs/{function_id}/download")
 async def download_function_logs(function_id: int, db: Session = Depends(get_db)):

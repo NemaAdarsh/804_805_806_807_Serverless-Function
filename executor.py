@@ -28,9 +28,10 @@ def execute_function(func_id: int, input_data: dict) -> dict:
         if func is None:
             raise HTTPException(status_code=404, detail="Function not found")
 
-        # Create a temporary directory for the function code
         temp_dir = f"/tmp/function_{func_id}"
         os.makedirs(temp_dir, exist_ok=True)
+        # Copy the function code to the temporary directory
+        # Assuming the function code is in a file named function.py
 
         # Save the function code to a file
         with open(os.path.join(temp_dir, "function.py"), "w") as f:

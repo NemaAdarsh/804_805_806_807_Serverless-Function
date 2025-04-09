@@ -82,6 +82,10 @@ def execute_function(func_id: int, input_data: dict) -> dict:
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    except KeyboardInterrupt:
+        raise HTTPException(status_code=500, detail="Execution interrupted")
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=500, detail="Failed to decode JSON output")
     finally:
         # Clean up the temporary directory
         if os.path.exists(temp_dir):

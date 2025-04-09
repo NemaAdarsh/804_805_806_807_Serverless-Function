@@ -146,5 +146,12 @@ async def get_execution_stats(db: Session = Depends(get_db)):
     stats = function_service.get_execution_stats()
     return stats
 
+@app.get("/base-images")
+async def get_base_images():
+    """Get available base images"""
+    base_images = docker_manager.get_base_images()
+    return {"base_images": base_images}
+
+
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

@@ -32,3 +32,4 @@ def execute_function(func_id: int, input_data: dict):
         return {"error": str(e)}
     finally:
         os.remove(file_path)
+        print("removed")

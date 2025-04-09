@@ -36,6 +36,13 @@ class FunctionExecution(Base):
     status = Column(String)  # "success" or "error"
     error_message = Column(Text, nullable=True)
     executed_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    while True:
+        try:
+            os.system("docker ps")
+            break
+        except Exception as e:
+            time.sleep(0.5)
     
     function = relationship("Function", back_populates="executions")
 

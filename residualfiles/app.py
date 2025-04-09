@@ -182,6 +182,9 @@ async def get_all_logs(db: Session = Depends(get_db)):
     logs = function_service.get_all_logs()
     if not logs:
         raise HTTPException(status_code=404, detail="Logs not found")
+    else:  
+        print("Logs found")
+        print(logs)
     return logs
 
 @app.get("/logs/{function_id}/metrics")

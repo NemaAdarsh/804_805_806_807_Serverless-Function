@@ -152,6 +152,14 @@ async def get_base_images():
     base_images = docker_manager.get_base_images()
     return {"base_images": base_images}
 
+@app.post("/base-images/build")
+async def build_base_images():
+    """Build base images"""
+    try:
+        docker_manager.build_base_images()
+        return {"message": "Base images built successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
